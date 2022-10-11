@@ -1,8 +1,10 @@
 const Book=require("../model/Book")
 const { StatusCodes } = require('http-status-codes')
 const { NotFoundError } = require('../errors')
+const APIFeatures=require("../utils/api-features")
 const getAllBooks=async(req,res)=>{
-    const book=await Book.find({})
+    const features= new APIFeatures(Book.find(),req.query).paginate()
+    const book=await features.query
     res.status(StatusCodes.OK).json({ book, count: book.length })
 }
 const createBook=async(req,res)=>{
