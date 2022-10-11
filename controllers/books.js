@@ -1,6 +1,7 @@
 const Book=require("../model/Book")
+const path = require('path');
 const { StatusCodes } = require('http-status-codes')
-const { NotFoundError } = require('../errors')
+const { NotFoundError,BadRequestError } = require('../errors')
 const APIFeatures=require("../utils/api-features")
 const getAllBooks=async(req,res)=>{
     const features= new APIFeatures(Book.find(),req.query).paginate()
@@ -8,8 +9,23 @@ const getAllBooks=async(req,res)=>{
     res.status(StatusCodes.OK).json({ book, count: book.length })
 }
 const createBook=async(req,res)=>{
-    const book=await Book.create(req.body)
-    res.status(StatusCodes.CREATED).json({ book })   
+    if (!req.files) {
+        throw new BadRequestError('No File Uploaded');
+      }
+      const bookImage = req.files.imageUrl;
+      const extensionName = path.extname(bookImage.name);
+      const allowedExtension = ['.png','.jpg','.jpeg'];
+      if(!allowedExtension.includes(extensionName)){
+        throw new BadRequestError('Please Upload a valid Image');
+    }
+    const imagePath = path.join(
+        __dirname,
+        '../uploads/' + `${bookImage.name}`
+      );
+      await bookImage.mv(imagePath);
+      req.body.imageUrl=`/uploads/${bookImage.name}`
+      const book=await Book.create(req.body)
+      res.status(StatusCodes.CREATED).json({ book })   
 }
 const getBook=async(req,res)=>{
     const {id:bookID}=req.params
