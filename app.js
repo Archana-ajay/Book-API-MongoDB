@@ -1,15 +1,17 @@
-const express=require("express")
+const express=require('express')
 const app=express()
-require("express-async-errors")
-require("dotenv").config()
+require('express-async-errors')
+require('dotenv').config()
 const fileUpload = require('express-fileupload');
-const connectDB = require("./db/connect");
+const connectDB = require('./db/connect');
 
-const booksRouter = require("./routes/books");
+const authRouter = require('./routes/auth');
+const booksRouter = require('./routes/books');
 
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
+//image upload
 app.use(express.json());
 app.use(fileUpload({
   limits: {
@@ -19,9 +21,13 @@ app.use(fileUpload({
   createParentPath: true
 }));
 
-// routes
-app.use('/api/v1/books',booksRouter);
 
+// routes
+app.use('/api/v1/', authRouter);
+app.use('/api/v1/books',booksRouter);
+app.use('/api/v1/uploads', express.static('uploads'));
+
+//middleware
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
