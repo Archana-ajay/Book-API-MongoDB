@@ -4,6 +4,7 @@ require('express-async-errors')
 require('dotenv').config()
 const fileUpload = require('express-fileupload');
 const connectDB = require('./db/connect');
+const authenticateUser = require('./middleware/authentication')
 
 const authRouter = require('./routes/auth');
 const booksRouter = require('./routes/books');
@@ -24,7 +25,7 @@ app.use(fileUpload({
 
 // routes
 app.use('/api/v1/', authRouter);
-app.use('/api/v1/books',booksRouter);
+app.use('/api/v1/books',authenticateUser,booksRouter);
 app.use('/api/v1/uploads', express.static('uploads'));
 
 //middleware
