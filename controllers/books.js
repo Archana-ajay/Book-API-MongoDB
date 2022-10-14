@@ -4,12 +4,14 @@ const { StatusCodes } = require('http-status-codes')
 const { NotFoundError,BadRequestError } = require('../errors')
 const APIFeatures=require("../utils/api-features")
 
+//retrieve the books from database
 const getAllBooks=async(req,res)=>{
-    const features= new APIFeatures(Book.find({}),req.query).paginate()
+    const features= new APIFeatures(Book.find({}),req.query).paginate()  
     const book=await features.query
     res.status(StatusCodes.OK).json({ book, count: book.length })
 }
 
+//create book and save in the databse
 const createBook=async(req,res)=>{
     if (!req.files) {
         throw new BadRequestError('No File Uploaded');
@@ -31,6 +33,7 @@ const createBook=async(req,res)=>{
       res.status(StatusCodes.CREATED).json({ book })
 }
 
+//retrieve a single book from database
 const getBook=async(req,res)=>{
     const {
         user: { userId },
@@ -43,6 +46,7 @@ const getBook=async(req,res)=>{
         res.status(StatusCodes.OK).json({ book })
 }
 
+//update a book in database
 const updateBook=async(req,res)=>{
     const {
         user: { userId },
@@ -55,6 +59,7 @@ const updateBook=async(req,res)=>{
         res.status(StatusCodes.OK).json({ book })
 }
 
+//delete a book from database
 const deleteBook=async(req,res)=>{
     const {
         user: { userId },
