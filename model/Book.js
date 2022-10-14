@@ -21,8 +21,13 @@ const BookSchema = new mongoose.Schema(
     pages:{
         type:Number,
         min:100
-    }
+    },
+    createdBy: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'Please provide user'],
   },
+},
   { timestamps: true }
 )
 
