@@ -4,9 +4,9 @@ const { StatusCodes } = require('http-status-codes')
 const { NotFoundError,BadRequestError } = require('../errors')
 const APIFeatures=require("../utils/api-features")
 
-//retrieve the books from database
+//retrieve the books created by user from database
 const getAllBooks=async(req,res)=>{
-    const features= new APIFeatures(Book.find({}),req.query).paginate()  
+    const features= new APIFeatures(Book.find({createdBy: req.user.userId }),req.query).paginate()  
     const book=await features.query
     res.status(StatusCodes.OK).json({ book, count: book.length })
 }
