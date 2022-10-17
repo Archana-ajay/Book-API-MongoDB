@@ -11,6 +11,14 @@ const getAllBooks=async(req,res)=>{
     res.status(StatusCodes.OK).json({ book, count: book.length })
 }
 
+//retrieve all books not created by the user
+const getRecommendedBooks=async(req,res)=>{
+  const features= new APIFeatures(Book.find({createdBy: {$ne:req.user.userId}}),req.query).paginate()  
+  const book=await features.query
+  res.status(StatusCodes.OK).json({ book, count: book.length })
+}
+
+
 //create book and save it in the databse
 const createBook=async(req,res)=>{
     if (!req.files) {
@@ -72,4 +80,4 @@ const deleteBook=async(req,res)=>{
         res.status(StatusCodes.OK).json({ book })
 }
 
-module.exports={getAllBooks,createBook,getBook,updateBook,deleteBook}
+module.exports={getAllBooks,getRecommendedBooks,createBook,getBook,updateBook,deleteBook}
