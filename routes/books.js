@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const validator=require('../middleware/validator')
+const {bodyMiddleware,queryMiddleware}=require('../middleware/validator')
 
 const {
     getAllBooks,
@@ -11,8 +11,8 @@ const {
     deleteBook
 } = require("../controllers/books")
 
-router.route('/').post(validator('book'),createBook).get(getAllBooks)
-router.route('/recommended_books').get(getRecommendedBooks)
+router.route('/').post(bodyMiddleware('book'),createBook).get(queryMiddleware('query'),getAllBooks)
+router.route('/recommended_books').get(queryMiddleware('query'),getRecommendedBooks)
 router.route('/:id').get(getBook).delete(deleteBook).patch(updateBook)
 
 module.exports = router
