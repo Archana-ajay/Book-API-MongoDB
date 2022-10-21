@@ -5,7 +5,7 @@ const bookSchema = Joi.object({
     imageUrl: Joi.string(),
     author: Joi.string().min(3).max(25),
     pages: Joi.number().min(50),
-    price: Joi.number().min(100)
+    price: Joi.number().min(100),
 });
 
 module.exports = bookSchema;
